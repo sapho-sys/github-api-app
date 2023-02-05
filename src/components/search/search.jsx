@@ -9,7 +9,7 @@ class Search extends React.Component {
 }
 _handleEntry(e){
     e.preventDefault();
-    history.push(`/user/${this.refs.userInput.value}`);
+    history.push(`/user/${this.ref.userInput.value}`);
 }
  
  render(){
