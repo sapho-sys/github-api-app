@@ -1,47 +1,39 @@
-import React from 'react';
-// import { browserHistory as history } from 'react-router';
+// import React from 'react';
+// // import { browserHistory as history } from 'react-router';
 
 
-// class Search extends React.Component {
-//    constructor(props){
-//     super(props);
-//     this._handleEntry = this._handleEntry.bind(this);
-// }
-// _handleEntry(e){
-//     e.preventDefault();
-//     history.push(`/user/${this.ref.userInput.value}`);
-// }
+
  
- render(){
-    return(
-        <div>
-<h1>My Hacker Stories</h1>
+//  render(){
+//     return(
+//         <div>
+// <h1>My Hacker Stories</h1>
 
-<InputWithLabel
-  id="search"
-  value={searchTerm}
-  isFocused
-  onInputChange={handleSearch}
->
-  <strong>Search:</strong>
-</InputWithLabel>
+// <InputWithLabel
+//   id="search"
+//   value={searchTerm}
+//   isFocused
+//   onInputChange={handleSearch}
+// >
+//   <strong>Search:</strong>
+// </InputWithLabel>
 
-<hr />
+// <hr />
 
-{stories.isError && <p>Something went wrong ...</p>}
+// {stories.isError && <p>Something went wrong ...</p>}
 
-{stories.isLoading ? (
-  <p>Loading ...</p>
-) : (
-  <List
-    list={searchedStories}
-    onRemoveItem={handleRemoveStory}
-  />
-)}
-</div> 
-    );
- }
-};
+// {stories.isLoading ? (
+//   <p>Loading ...</p>
+// ) : (
+//   <List
+//     list={searchedStories}
+//     onRemoveItem={handleRemoveStory}
+//   />
+// )}
+// </div> 
+//     );
+//  }
+// };
 
 // export default Search;
 
