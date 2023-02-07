@@ -87,7 +87,7 @@ const storiesReducer = (state, action) => {
 const App = () => {
   const [searchTerm, setSearchTerm] = useSemiPersistentState(
     'search',
-    'React'
+    'Redux'
   );
 
   const [urls, setUrls] = React.useState([getUrl(searchTerm, 0)]);
