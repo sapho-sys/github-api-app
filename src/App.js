@@ -4,6 +4,30 @@ import { sortBy } from 'lodash';
 
 const API_ENDPOINT = 'https://hn.algolia.com/api/v1/search?query=';
 
+const getUrl = searchTerm => `${API_ENDPOINT}${searchTerm}`;
+
+const extractSearchTerm = url => url.replace(API_ENDPOINT, '');
+
+const getLastSearches = urls =>
+  urls
+    .reduce((result, url, index) => {
+      const searchTerm = extractSearchTerm(url);
+
+      if (index === 0) {
+        return result.concat(searchTerm);
+      }
+
+      const previousSearchTerm = result[result.length - 1];
+
+      if (searchTerm === previousSearchTerm) {
+        return result;
+      } else {
+        return result.concat(searchTerm);
+      }
+    }, [])
+    .slice(-6)
+    .slice(0, -1);
+
 const useSemiPersistentState = (key, initialState) => {
   const [value, setValue] = React.useState(
     localStorage.getItem(key) || initialState
@@ -49,36 +73,13 @@ const storiesReducer = (state, action) => {
   }
 };
 
-const extractSearchTerm = url => url.replace(API_ENDPOINT, '');
-const getLastSearches = urls =>
-  urls.slice(-5).map(extractSearchTerm);
-const getUrl = searchTerm => `${API_ENDPOINT}${searchTerm}`;
-
 const App = () => {
   const [searchTerm, setSearchTerm] = useSemiPersistentState(
     'search',
     'React'
   );
 
-
-
-  const handleSearchSubmit = event => {
-    handleSearch(searchTerm);
-    event.preventDefault();
-  };
-
-  const handleLastSearch = searchTerm => {
-
-    handleSearch(searchTerm);
-
-  };
-   const handleSearch = searchTerm => {
-    const url = getUrl(searchTerm);
-    setUrls(urls.concat(url));
-  };
-
   const [urls, setUrls] = React.useState([getUrl(searchTerm)]);
-  const lastSearches = getLastSearches(urls);
 
   const [stories, dispatchStories] = React.useReducer(
     storiesReducer,
@@ -99,7 +100,6 @@ const App = () => {
     } catch {
       dispatchStories({ type: 'STORIES_FETCH_FAILURE' });
     }
-
   }, [urls]);
 
   React.useEffect(() => {
@@ -116,7 +116,26 @@ const App = () => {
   const handleSearchInput = event => {
     setSearchTerm(event.target.value);
   };
-  
+
+  const handleSearchSubmit = event => {
+    handleSearch(searchTerm);
+
+    event.preventDefault();
+  };
+
+  const handleLastSearch = searchTerm => {
+    setSearchTerm(searchTerm);
+
+    handleSearch(searchTerm);
+  };
+
+  const handleSearch = searchTerm => {
+    const url = getUrl(searchTerm);
+    setUrls(urls.concat(url));
+  };
+
+  const lastSearches = getLastSearches(urls);
+
   return (
     <div>
       <h1>My Hacker Stories</h1>
@@ -126,15 +145,11 @@ const App = () => {
         onSearchInput={handleSearchInput}
         onSearchSubmit={handleSearchSubmit}
       />
-       {lastSearches.map((searchTerm, index) => (
-        <button
-          key={searchTerm + index}
-          type="button"
-          onClick={() => handleLastSearch(searchTerm)}
-        >
-          {searchTerm}
-        </button>
-      ))}
+
+      <LastSearches
+        lastSearches={lastSearches}
+        onLastSearch={handleLastSearch}
+      />
 
       <hr />
 
@@ -148,6 +163,20 @@ const App = () => {
     </div>
   );
 };
+
+const LastSearches = ({ lastSearches, onLastSearch }) => (
+  <>
+    {lastSearches.map((searchTerm, index) => (
+      <button
+        key={searchTerm + index}
+        type="button"
+        onClick={() => onLastSearch(searchTerm)}
+      >
+        {searchTerm}
+      </button>
+    ))}
+  </>
+);
 
 const SearchForm = ({
   searchTerm,
